@@ -59,8 +59,7 @@ class RequestEncodingMixin:
                         )
         else:
             return data
-    
-    
+
 
 class RequestHooksMixin:
     def register_hook(self,event,hook):
@@ -163,6 +162,85 @@ class Request(RequestHooksMixin):
             data=self.data,
 
         )
+
+
+class PreparedRequest(RequestEncodingMixin,RequestHooksMixin):
+
+
+    def __init__(self):
+        self.method = None
+        self.url = None
+        self.headers=None
+        self._cookies = None
+        self.body = None
+        self.hooks = default_hooks()
+        self._body_position=None
+
+    def prepare(
+        self,
+        method=None,
+        url=None,
+        headers=None,
+        files=None,
+        data=None,
+        params=None,
+        auth=None,
+        cookies=None,
+        hooks=None,
+        json=None,
+    ):
+        """Prepares the entire request with the given parameters."""
+
+        self.prepare_method(method)
+        self.prepare_url(url)
+        self.prepare_headers(headers)
+        self.prepare_cookies(cookies)
+        self.prepare_body(body)
+        self.prepare_auth(auth,url)
+
+
+        # Note that prepare_auth must be the last to enable authentication schemes
+        # such as OAuth to work on a fully prepare request 
+
+        # This must go after prepare_auth. Authenticators could add a hook. 
+        self.prepare_hooks(hooks)
+    
+    def __repr__(self):
+        return f"FunYayRooooRoo[{self.method}]"
+
+    
+    def prepare_method(self,method):
+        self.method = method
+        if self.method is not None:
+            # TODO: Add support for Native String.
+            # self.method = to_native_string(self.method.upper())
+            self.method = self.method.upper()
+    
+    def prepare_url(self):
+        pass
+    
+
+    def prepare_headers(self):
+        pass
+    
+    def prepare_body(self):
+        pass
+    
+    def prepare_content_length(self):
+        pass
+    
+    def prepare_auth(self):
+        pass
+    
+    def prepare_cookies(self):
+        pass
+    
+
+    def prepare_hooks(self):
+        pass
+    
+    
+
 
 
 
