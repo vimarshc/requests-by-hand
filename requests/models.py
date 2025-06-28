@@ -239,8 +239,64 @@ class PreparedRequest(RequestEncodingMixin,RequestHooksMixin):
     def prepare_hooks(self):
         pass
     
+
+
+class Response:
+    """
+    The :class: Response object, which contains a server's response to an HTTP request. 
+    """
+
+    __attrs__ = [
+        "_content",
+        "status_code",
+        "headers",
+        "url",
+        "history",
+        "encoding",
+        "reason",
+        "cookies",
+        "elapsed",
+        "request"
+    ]
+
+    def __init__(self):
+        self._content = False
+        self._content_consumed = False
+        self._next = None
+
+        # Integer code of the responded HTTP Status
+        self.status_code = None
+
+        # Case Insensitive Dictionary of the Response Headers
+        # TODO: Add CaseInsensitiveDict
+        self.headers = CaseInsensitiveDict()
+
+        # File-like object representation of response (for advanced usage). 
+        # Use of the `raw`` requires that ``stream=True`` be set on the request. 
+        # This requirement doers not apply for use internally to Requests. 
+        self.raw = None
+
+        # Final URL location of Response
+        self.url = None
+
+        # Encoding to decode with when accessing r.text
+        self.encoding = None
+
+        
+        # A list of Response objects from 
+        # the history of the Request. Any redirect responses will end 
+        # up here. The list if sorted from the oldest to the most recent request. 
+        self.history = []
+
+        # Textural reason of the responded HTTP Status. 
+        self.reason = None
+
+        # A CookieJar of cookies that the server sent back
+        self.cookies = cookiejar_from_dict({})
+
+        self.elapsed = datetime.timedelta(0)
+
+        self.request = None
     
-
-
-
+    
 
